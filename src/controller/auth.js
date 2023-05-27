@@ -63,13 +63,18 @@ export const login = async (req, res) => {
     res.cookie('x-session-token', JSON.stringify(signedToken), { httpOnly: true, maxAge: 3600000 })
 
     res.status(200).send({
-      message: "Success"
+      message: 'Login Success'
     });
 
   } catch (error) {
     console.log(error);
     res.status(500).send({
-      message: "An error has ocurred"
+      message: 'An error has ocurred'
     });
   }
+}
+
+export const logout = async (req, res) => {
+  res.clearCookie('x-session-token');
+  res.status(200).send('Logout Success');
 }
