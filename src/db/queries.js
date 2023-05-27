@@ -45,7 +45,6 @@ export const createUser = (email, username, password) => {
 export const checkIfUserExists = (value, column) => {
   return pool.query(`SELECT * from users WHERE ${column} = $1`, [value])
     .then(results => {
-      console.log(results);
       return results.rowCount > 0;
     });
 }
