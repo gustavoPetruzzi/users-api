@@ -1,6 +1,7 @@
 import 'dotenv/config';
 import express from 'express';
 import authRoutes from './routes/auth.js';
+import cookieParser from 'cookie-parser';
 
 const PORT = process.env.PORT;
 
@@ -13,6 +14,7 @@ app.get('/health', (req, res) => {
   res.status(200).send('Ok');
 });
 
+app.use(cookieParser());
 app.use(authRoutes);
 
 app.listen(PORT, () => {
