@@ -10,3 +10,7 @@ import jsonwebtoken from "jsonwebtoken";
 export const getSignedToken = (user) => {
   return jsonwebtoken.sign(user, process.env.JWT_KEY);
 }
+
+export const decodeToken = (token) => {
+  return jsonwebtoken.verify(token, process.env.JWT_KEY);
+}
