@@ -1,7 +1,7 @@
 import * as argon2 from 'argon2';
 
-import { checkIfUserExists, createUser, getUserByEmail } from "../db/queries.js";
-import { getSignedToken } from '../util.js';
+import { checkIfUserExists, createUser, getUserByEmail, getUserById } from "../db/queries.js";
+import { decodeToken, getSignedToken } from '../util.js';
 
 export const signUp = async (req, res) => {
   try {
@@ -60,10 +60,10 @@ export const login = async (req, res) => {
     }
 
     const signedToken = getSignedToken({id: user.user_id, email: user.email });
-    res.cookie('x-session-token', JSON.stringify(signedToken), { httpOnly: true, maxAge: 3600000 })
-
+    res.cookie('x-session-token', signedToken, { httpOnly: true, maxAge: 3600000 })
     res.status(200).send({
-      message: 'Login Success'
+      message: 'Login Success', 
+      token: signedToken
     });
 
   } catch (error) {
@@ -77,4 +77,22 @@ export const login = async (req, res) => {
 export const logout = async (req, res) => {
   res.clearCookie('x-session-token');
   res.status(200).send('Logout Success');
+}
+
+export const me = async (req, res) => {
+  const token = req.cookies["x-session-token"];
+  const decodedToken = decodeToken(token);
+  const user = await getUserById(decodedToken.id);
+  
+  if (!user) {
+    return res.status(400).send({
+      error: "No user found"
+    });
+  }
+
+  res.status(200).send({
+    id: user.user_id,
+    email: user.email,
+    username: user.username
+  });
 }
