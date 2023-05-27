@@ -4,6 +4,7 @@ import pool from "./db.js";
  * User
  * @typedef {Object} User
  * @property {number} user_id
+ * @property {string} username
  * @property {string} email
  * @property {string} password
 */
@@ -22,6 +23,16 @@ export const getUserByEmail = (email) => {
     });
 }
 
+/**
+ * Get an user by id
+ * @param {string} id 
+ * @returns {promise<User>} A promise of a user
+ */
+export const getUserById = (id) => {
+  return pool.query('SELECT * FROM users WHERE user_id = $1', [id])
+    .then(results => results.rows[0]);
+}
+
 
 /**
  * Create an user
@@ -31,7 +42,6 @@ export const getUserByEmail = (email) => {
  * @returns {Promise<number>} new user's id
  */
 export const createUser = (email, username, password) => {
-  console.log(process.env.POSTGRES_USER);
   return pool.query('INSERT INTO users (email, username, password) VALUES ($1, $2, $3) RETURNING *', [email, username, password])
     .then(results => results.rows[0].user_id);
 }
