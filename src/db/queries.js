@@ -3,7 +3,7 @@ import pool from "./db.js";
 /** 
  * User
  * @typedef {Object} User
- * @property {number} id
+ * @property {number} user_id
  * @property {string} email
  * @property {string} password
 */
@@ -16,9 +16,9 @@ import pool from "./db.js";
  * @return {Promise<User>} A promise of a user 
  */
 export const getUserByEmail = (email) => {
-  return pool.query('SELECT * FROM users WHERE email = = $1', [email])
+  return pool.query('SELECT * FROM users WHERE email = $1', [email])
     .then(results => {
-      return results.rows;
+      return results.rows[0];
     });
 }
 
